@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { useTodoContext, Todo } from './TodoContext';
-import { AuthContext } from './AuthContext';
+import { useTodoContext, Todo } from '../hooks/TodoContext';
+import { AuthContext } from '../hooks/AuthContext';
 import './Dashboard.css';
 
 const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {

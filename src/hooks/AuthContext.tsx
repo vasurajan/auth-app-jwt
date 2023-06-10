@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const login = (username: string, password: string) => {
         // Perform authentication logic here
         const validUsername = 'admin';
-        const validPassword = '12345';
+        const validPassword = 'dIc$SGwh2tQEn@&d';
 
         if (username === validUsername && password === validPassword) {
             const user = { username };
