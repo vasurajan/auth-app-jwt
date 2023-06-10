@@ -20,14 +20,10 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         todos
     };
 
-    return (
-        <TodoContext.Provider value={value}>
-            {children}
-        </TodoContext.Provider>
-    );
+    return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 };
 
-export const useTodoContext = () => {
+export const useTodoContext = (): TodoContextValue => {
     const context = useContext(TodoContext);
     if (!context) {
         throw new Error('useTodoContext must be used within a TodoProvider');

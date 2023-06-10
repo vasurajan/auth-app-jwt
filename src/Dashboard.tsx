@@ -4,6 +4,7 @@ import { AuthContext } from './AuthContext';
 import './Dashboard.css';
 
 const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
+
     const [nestedTodo, setNestedTodo] = useState('');
 
     const handleNestedTodoSubmit = (e: React.FormEvent) => {
@@ -19,13 +20,31 @@ const TodoItem: React.FC<{ todo: Todo }> = ({ todo }) => {
         }
     };
 
+    const handleTodoClick = () => {
+        todo.completed = !todo.completed;
+        console.log(todo.completed)
+    };
+
+    const handleNestedTodoClick = (nestedTodo: Todo) => {
+        nestedTodo.completed = !nestedTodo.completed;
+        setNestedTodo('');
+    };
+
     return (
-        <div className="todo-item">
-            <input type="checkbox" checked={todo.completed} onChange={() => { }} />
+        <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+            <input type="checkbox" onChange={handleTodoClick} />
             <span>{todo.title}</span>
             <ul>
                 {todo.nestedTodos.map((nestedTodo) => (
-                    <li key={nestedTodo.id}>{nestedTodo.title}</li>
+                    <div>
+                        <input
+                            type='checkbox'
+                            key={nestedTodo.id}
+                            className={`nested-todo ${nestedTodo.completed ? 'completed' : ''}`}
+                            onClick={() => handleNestedTodoClick(nestedTodo)}
+                        />
+                        {nestedTodo.title}
+                    </div>
                 ))}
             </ul>
             <form onSubmit={handleNestedTodoSubmit}>
@@ -66,9 +85,7 @@ const Dashboard: React.FC = () => {
     return (
         <div className="dashboard">
             <h1>Dashboard</h1>
-            <button onClick={handleLogout} className="logout-button">
-                Logout
-            </button>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
             <form onSubmit={handleTodoSubmit}>
                 <input
                     type="text"
@@ -77,17 +94,11 @@ const Dashboard: React.FC = () => {
                     placeholder="Add a new todo"
                     className="todo-input"
                 />
-                <button type="submit" className="add-todo-button">
-                    Add Todo
-                </button>
+                <button type="submit" className="add-todo-button">Add Todo</button>
             </form>
-            <ul>
-                {todos.map((todo) => (
-                    <li key={todo.id}>
-                        <TodoItem todo={todo} />
-                    </li>
-                ))}
-            </ul>
+            {todos.map((todo, i) => (
+                <TodoItem key={i} todo={todo} />
+            ))}
         </div>
     );
 };

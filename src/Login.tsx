@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { useAuthContext } from './AuthContext';
 import './Login.css';
 
-const LoginForm: React.FC = () => {
+const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { user, login, logout } = useContext(AuthContext);
+    const { user, login, error } = useAuthContext();
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
@@ -15,22 +15,22 @@ const LoginForm: React.FC = () => {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        await login(username, password);
+        login(username, password);
     };
 
     if (user) {
         return (
-            <div className="logout-container">
+            <div>
                 <h2>Welcome, {user.username}!</h2>
-                <button onClick={logout} className="logout-button">Logout</button>
             </div>
         );
     }
 
     return (
         <div className="login-form-container">
+            {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleSubmit} className="login-form">
                 <h2>Login</h2>
                 <input
@@ -39,7 +39,6 @@ const LoginForm: React.FC = () => {
                     value={username}
                     onChange={handleUsernameChange}
                     className="login-input"
-                    required
                 />
                 <input
                     type="password"
@@ -47,7 +46,6 @@ const LoginForm: React.FC = () => {
                     value={password}
                     onChange={handlePasswordChange}
                     className="login-input"
-                    required
                 />
                 <button type="submit" className="login-button">Login</button>
             </form>
@@ -55,4 +53,4 @@ const LoginForm: React.FC = () => {
     );
 };
 
-export default LoginForm;
+export default Login;

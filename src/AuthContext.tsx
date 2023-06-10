@@ -1,58 +1,63 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface User {
-    id: string;
     username: string;
-    // Add any other user data you need
 }
 
 interface AuthContextProps {
     user: User | null;
-    login: (username: string, password: string) => Promise<void>;
+    error: string | null;
+    login: (username: string, password: string) => void;
     logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
     user: null,
-    login: () => Promise.resolve(),
+    error: "",
+    login: () => { },
     logout: () => { },
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+    const login = (username: string, password: string) => {
+        // Perform authentication logic here
+        const validUsername = 'admin';
+        const validPassword = '12345';
+
+        if (username === validUsername && password === validPassword) {
+            const user = { username };
+            setUser(user);
+            localStorage.setItem('user', JSON.stringify(user));
+            setError('');
+            navigate('/dashboard');
+        } else {
+            setError('Invalid credentials');
         }
-    }, []);
-
-    const login = async (username: string, password: string) => {
-        // Simulating login API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const user: User = {
-            id: '1',
-            username: username,
-        };
-
-        localStorage.setItem('user', JSON.stringify(user));
-        setUser(user);
-        navigate('/dashboard'); // Redirect to dashboard after login
     };
 
     const logout = () => {
-        localStorage.removeItem('user');
         setUser(null);
-        navigate('/'); // Redirect to login after logout
+        localStorage.removeItem('user');
+        navigate('/');
     };
 
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            setUser(JSON.parse(user));
+        }
+    }, []);
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-            {children} {/* Render the children */}
+        <AuthContext.Provider value={{ user, login, logout, error }}>
+            {children}
         </AuthContext.Provider>
     );
 };
+
+export const useAuthContext = () => useContext(AuthContext);

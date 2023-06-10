@@ -35,3 +35,13 @@
 .todo-item input[type="checkbox"] {
   margin-right: 10px;
 }
+
+.todo-item span.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.todo-item ul li.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
